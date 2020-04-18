@@ -5,7 +5,7 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
     public GameObject hexPrefab;
-    public int players = 2;
+    public int players = 4;
     public GameObject p1;
     public GameObject p2;
     public GameObject p3;
@@ -32,6 +32,7 @@ public class Map : MonoBehaviour
     void Start()
     {
         GenerateBoard();
+        Debug.Log(players+"----");
         GeneratePlayers(players);
         whoseTurn = 0;
         switch (players)
@@ -632,8 +633,31 @@ public class Map : MonoBehaviour
         {
             for (int col = 0; col < 4; col++)
             {
-				int d = 3 - (row - 9);
-				if (col <= 3 - ((d + 1) / 2) && col >= ( (9 + ((d+1) / 2)) - row))
+				int d = 12 - row;
+				if (col <= 3 - ((d + 1) / 2) && col >= ((d)/2))
+                {
+                    float colPos = col * xOffset;
+                    if (row % 2 == 1)
+                    {
+                        colPos += xOffset / 2f;
+                    }
+
+                    createPeg(player, row, col, colPos, zOffset);
+                }
+
+            }
+        }
+
+    }
+
+    private void FillSixthTriangle(GameObject player)
+    {
+        for (int row = 4; row < 8; row++)
+        {
+            for (int col = 0; col < 4; col++)
+            {
+				int d = row-4;
+				if (col <=  3 - ((d+1) / 2) && col >= ((d)/2))
                 {
                     float colPos = col * xOffset;
                     if (row % 2 == 1)
@@ -651,42 +675,60 @@ public class Map : MonoBehaviour
 
     private void GeneratePlayers(int players)
     {
-        
+        Debug.Log(players);
         switch (players)
         {
             case 2:
                 {
+                    Debug.Log("2");
                     // player 1
                     FillFirstTriangle(p1);
 
                     // player 2
                     FillFourthTriangle(p2);
-
-                    FillSecondTriangle(p3);
-
-                    FillThirdTriangle(p4);
-
-                    FillFifthTriangle(p5);
                     break;
                 }
             case 3:
                 {
-                    turns = new int[3] { 1, 3, 2 };
+                    Debug.Log("3");
+                    FillFirstTriangle(p1);
+                    FillThirdTriangle(p2);
+                    FillFifthTriangle(p3);
                     break;
                 }
             case 4:
                 {
-                    turns = new int[4] { 1, 3, 2, 4 };
+                    Debug.Log("4");
+                    FillFirstTriangle(p1);
+                    FillSecondTriangle(p2);
+
+                    FillFourthTriangle(p3);
+                    FillFifthTriangle(p4);
                     break;
                 }
             case 5:
                 {
-                    turns = new int[5] { 1, 3, 5, 2, 4 };
+                    FillFirstTriangle(p1);
+                    FillSecondTriangle(p2);
+
+                    FillThirdTriangle(p3);
+
+                    FillFourthTriangle(p4);
+                    FillFifthTriangle(p5);
+
+
                     break;
                 }
             case 6:
                 {
-                    turns = new int[6] { 1, 3, 5, 2, 4, 6 };
+                    FillFirstTriangle(p1);
+                    FillSecondTriangle(p2);
+
+                    FillThirdTriangle(p3);
+                    FillFourthTriangle(p4);
+
+                    FillFourthTriangle(p5);
+                    FillFifthTriangle(p6);
                     break;
                 }
             default:
@@ -695,7 +737,7 @@ public class Map : MonoBehaviour
                     FillFirstTriangle(p1);
 
                     // player 2
-                    FillFourthTriangle(p2);
+                    //FillFourthTriangle(p2);
                     break;
                 }
         }
