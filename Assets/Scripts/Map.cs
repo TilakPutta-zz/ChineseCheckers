@@ -25,11 +25,48 @@ public class Map : MonoBehaviour
     private bool moved;
     private Color highLight1 = Color.HSVToRGB(0.5f, 0.5f, 0.5f);
     private Color highLight2 = Color.HSVToRGB(0.499f, 0.499f, 0.499f);
+
+    private int whoseTurn;
+    private int[] turns;
     // Start is called before the first frame update
     void Start()
     {
         GenerateBoard();
         GeneratePlayers(players);
+        whoseTurn = 0;
+        switch (players)
+        {
+            case 2:
+                {
+                    turns = new int[2] {1, 2};
+                    break;
+                }
+            case 3:
+                {
+                    turns = new int[3] { 1, 3, 2 };
+                    break;
+                }
+            case 4:
+                {
+                    turns = new int[4] { 1, 3, 2, 4 };
+                    break;
+                }
+            case 5:
+                {
+                    turns = new int[5] { 1, 3, 5, 2, 4 };
+                    break;
+                }
+            case 6:
+                {
+                    turns = new int[6] { 1, 3, 5, 2, 4, 6 };
+                    break;
+                }
+            default:
+                {
+                    turns = new int[2] { 1, 2 };
+                    break;
+                }
+        }
     }
 
     private void Update()
@@ -45,7 +82,8 @@ public class Map : MonoBehaviour
             {
                 MeshRenderer mr = ourHitObject.GetComponentInChildren<MeshRenderer>();
                 //Debug.Log(mr.name);
-                if (mr.name.StartsWith("Sphere"))
+                Debug.Log(turns[whoseTurn]);
+                if (mr.name.StartsWith("Sphere") && ourHitObject.name.StartsWith("Peg"+turns[whoseTurn]))
                 {
                     mouseOverPeg(ourHitObject);
                 }
@@ -79,6 +117,57 @@ public class Map : MonoBehaviour
     {
         if (selectedPeg != null && isHighLighted(ourHitObject))
         {
+            Hex hex = ourHitObject.GetComponent<Hex>();
+            tryMove(selectedPeg.pegPlacedRow, selectedPeg.pegPlacedCol, hex.row, hex.col);
+        }
+    }
+
+    private void mouseOverPeg(GameObject ourHitObject)
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (selectedPeg == null)
+            {
+                selectedPeg = ourHitObject.GetComponent<Peg>();
+                Vector3 pos = selectedPeg.transform.position;
+                selectedPeg.transform.position = new Vector3(pos.x, 0.5f, pos.z);
+                highLightMoves(selectedPeg.pegPlacedRow, selectedPeg.pegPlacedCol);
+            }
+            else
+            {
+                completeMove(selectedPeg.pegPlacedRow, selectedPeg.pegPlacedCol);
+            }
+        }
+    }
+
+    private void selectPeg(int row, int col)
+    {
+        selectedPeg = pegs[row, col];
+    }
+
+    private void completeMove(int row, int col)
+    {
+        selectedPeg = pegs[row, col];
+        Vector3 pos = selectedPeg.transform.position;
+        selectedPeg.transform.position = new Vector3(pos.x, 0.0f, pos.z);
+        clearHighLights(selectedPeg.pegPlacedRow, selectedPeg.pegPlacedCol);
+        selectedPeg = null;
+        moved = false;
+        jumped = false;
+        endTurn();
+    }
+
+    private void endTurn()
+    {
+        whoseTurn = (whoseTurn + 1) % players;
+    }
+
+    private void tryMove(int x1, int y1, int x2, int y2)
+    {
+        selectPeg(x1, y1);
+        GameObject ourHitObject = GameObject.Find("HEX_" + x2 + "_" + y2);
+        if (selectedPeg != null && isHighLighted(ourHitObject))
+        {
             if (isMoved(ourHitObject))
             {
                 moved = true;
@@ -97,29 +186,6 @@ public class Map : MonoBehaviour
             selectedPeg.pegPlacedCol = hex.col;
             pegs[hex.row, hex.col] = selectedPeg;
             highLightMoves(hex.row, hex.col);
-        }
-    }
-
-    private void mouseOverPeg(GameObject ourHitObject)
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (selectedPeg == null)
-            {
-                selectedPeg = ourHitObject.GetComponent<Peg>();
-                Vector3 pos = selectedPeg.transform.position;
-                selectedPeg.transform.position = new Vector3(pos.x, 0.5f, pos.z);
-                highLightMoves(selectedPeg.pegPlacedRow, selectedPeg.pegPlacedCol);
-            }
-            else
-            {
-                Vector3 pos = selectedPeg.transform.position;
-                selectedPeg.transform.position = new Vector3(pos.x, 0.0f, pos.z);
-                clearHighLights(selectedPeg.pegPlacedRow, selectedPeg.pegPlacedCol);
-                selectedPeg = null;
-                moved = false;
-                jumped = false;
-            }
         }
     }
 
@@ -463,6 +529,7 @@ public class Map : MonoBehaviour
 
     private void GeneratePlayers(int players)
     {
+        // player 1
         for (int row=0;row < 4; row++ )
         {
             for (int col=0;col < width; col++)
@@ -486,6 +553,7 @@ public class Map : MonoBehaviour
             }
         }
 
+        // player 2
         for (int row = 13; row < height; row++)
         {
             for (int col = 0; col < width; col++)
