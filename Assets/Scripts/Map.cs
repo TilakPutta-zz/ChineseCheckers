@@ -82,7 +82,7 @@ public class Map : MonoBehaviour
             {
                 MeshRenderer mr = ourHitObject.GetComponentInChildren<MeshRenderer>();
                 //Debug.Log(mr.name);
-                Debug.Log(turns[whoseTurn]);
+                //Debug.Log(turns[whoseTurn]);
                 if (mr.name.StartsWith("Sphere") && ourHitObject.name.StartsWith("Peg"+turns[whoseTurn]))
                 {
                     mouseOverPeg(ourHitObject);
@@ -527,12 +527,24 @@ public class Map : MonoBehaviour
         }
     }
 
-    private void GeneratePlayers(int players)
-    {
-        // player 1
-        for (int row=0;row < 4; row++ )
+    private void createPeg(GameObject player, int row, int col, float colPos, float offset)
+	{
+        GameObject go = Instantiate(player, new Vector3(colPos, 0, row * offset), Quaternion.identity) as GameObject;
+        go.transform.SetParent(transform);
+        Peg p = go.GetComponent<Peg>();
+        //Debug.Log(row + "---" + col);
+        p.pegRow = row;
+        p.pegCol = col;
+        p.pegPlacedRow = row;
+        p.pegPlacedCol = col;
+        pegs[row, col] = p;
+    }
+
+    private void FillFirstTriangle(GameObject player)
+	{
+        for (int row = 0; row < 4; row++)
         {
-            for (int col=0;col < width; col++)
+            for (int col = 0; col < width; col++)
             {
                 if (col <= 6 + (row / 2) && col >= (6 + (row / 2) - row))
                 {
@@ -541,19 +553,61 @@ public class Map : MonoBehaviour
                     {
                         colPos += xOffset / 2f;
                     }
-                    GameObject go = Instantiate(p1, new Vector3(colPos, 0, row * zOffset), Quaternion.identity) as GameObject;
-                    go.transform.SetParent(transform);
-                    Peg p = go.GetComponent<Peg>();
-                    p.pegRow = row;
-                    p.pegCol = col;
-                    p.pegPlacedRow = row;
-                    p.pegPlacedCol = col;
-                    pegs[row, col] = p;
+                    createPeg(player, row, col, colPos, zOffset);
                 }
             }
         }
+    }
 
-        // player 2
+    private void FillSecondTriangle(GameObject player)
+	{
+        for(int row = 4; row < 8; row++)
+		{
+            for (int col = 9; col < width; col++)
+            {
+                int d = row - 4;
+                if (col <= 12 - ((d + 1) / 2) && col >= 9 + (d/2))
+				{
+                    float colPos = col * xOffset;
+                    if (row % 2 == 1)
+                    {
+                        colPos += xOffset / 2f;
+                    }
+
+                    createPeg(player, row, col, colPos, zOffset);
+                }
+                    
+    		}
+        }
+        
+    }
+
+
+    private void FillThirdTriangle(GameObject player)
+    {
+        for (int row = 9; row < 13; row++)
+        {
+            for (int col = 9; col < width; col++)
+            {
+                int d = 12 - row;
+                if (col <= 12 - ( (d+1)/ 2) && col >= 9 + (d/2))
+                {
+                    float colPos = col * xOffset;
+                    if (row % 2 == 1)
+                    {
+                        colPos += xOffset / 2f;
+                    }
+
+                    createPeg(player, row, col, colPos, zOffset);
+                }
+
+            }
+        }
+
+    }
+
+    private void FillFourthTriangle(GameObject player)
+    {
         for (int row = 13; row < height; row++)
         {
             for (int col = 0; col < width; col++)
@@ -566,16 +620,85 @@ public class Map : MonoBehaviour
                     {
                         colPos += xOffset / 2f;
                     }
-                    GameObject go = Instantiate(p2, new Vector3(colPos, 0, row * zOffset), Quaternion.identity) as GameObject;
-                    go.transform.SetParent(transform);
-                    Peg p = go.GetComponent<Peg>();
-                    p.pegRow = row;
-                    p.pegCol = col;
-                    p.pegPlacedRow = row;
-                    p.pegPlacedCol = col;
-                    pegs[row, col] = p;
+                    createPeg(player, row, col, colPos, zOffset);
                 }
             }
         }
     }
+
+    private void FillFifthTriangle(GameObject player)
+    {
+        for (int row = 9; row < 13; row++)
+        {
+            for (int col = 0; col < 4; col++)
+            {
+				int d = 3 - (row - 9);
+				if (col <= 3 - ((d + 1) / 2) && col >= ( (9 + ((d+1) / 2)) - row))
+                {
+                    float colPos = col * xOffset;
+                    if (row % 2 == 1)
+                    {
+                        colPos += xOffset / 2f;
+                    }
+
+                    createPeg(player, row, col, colPos, zOffset);
+                }
+
+            }
+        }
+
+    }
+
+    private void GeneratePlayers(int players)
+    {
+        
+        switch (players)
+        {
+            case 2:
+                {
+                    // player 1
+                    FillFirstTriangle(p1);
+
+                    // player 2
+                    FillFourthTriangle(p2);
+
+                    FillSecondTriangle(p3);
+
+                    FillThirdTriangle(p4);
+
+                    FillFifthTriangle(p5);
+                    break;
+                }
+            case 3:
+                {
+                    turns = new int[3] { 1, 3, 2 };
+                    break;
+                }
+            case 4:
+                {
+                    turns = new int[4] { 1, 3, 2, 4 };
+                    break;
+                }
+            case 5:
+                {
+                    turns = new int[5] { 1, 3, 5, 2, 4 };
+                    break;
+                }
+            case 6:
+                {
+                    turns = new int[6] { 1, 3, 5, 2, 4, 6 };
+                    break;
+                }
+            default:
+                {
+                    // player 1
+                    FillFirstTriangle(p1);
+
+                    // player 2
+                    FillFourthTriangle(p2);
+                    break;
+                }
+        }
+    }
+
 }
