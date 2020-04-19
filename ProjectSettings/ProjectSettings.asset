@@ -665,10 +665,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 472a2560-7627-47ee-b1b2-06fde22a0565
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: Checkers
+  organizationId: unity_e-e_ujhd-ccdwq
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
