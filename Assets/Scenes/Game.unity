@@ -152,6 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hexPrefab: {fileID: 1473775093888137022, guid: 8dc8535ab88c94fbdb7ea5b0ff1f8f22,
     type: 3}
+  playerNumber: 0
   players: 2
   p1: {fileID: 8702059519116888267, guid: 560e81adf068e45aabcd74f7f5f8ef43, type: 3}
   p2: {fileID: 4369301927410834601, guid: 7ca12755a42364c6b93b7efbe29bd920, type: 3}
@@ -342,7 +343,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684521726}
   m_LocalRotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
-  m_LocalPosition: {x: 5.292, y: 15, z: 6.112}
+  m_LocalPosition: {x: 5.292, y: 25, z: 6.112}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

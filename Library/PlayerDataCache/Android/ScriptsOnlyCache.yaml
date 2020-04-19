@@ -5,6 +5,7 @@ ScriptsOnlyBuild:
     - GameManager
     - Hex
     - Map
+    - NetworkClient
     - Peg
     - Server
     Unity.Rider.Editor.dll:
@@ -51,11 +52,11 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11322}
+      Script: {instanceID: 11338}
     - Class: 114
-      Script: {instanceID: 11640}
+      Script: {instanceID: 11676}
     - Class: 114
-      Script: {instanceID: 12496}
+      Script: {instanceID: 12612}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 135
@@ -84,27 +85,29 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11152}
+      Script: {instanceID: 11154}
     - Class: 114
-      Script: {instanceID: 11262}
+      Script: {instanceID: 11272}
     - Class: 114
-      Script: {instanceID: 11310}
+      Script: {instanceID: 11326}
     - Class: 114
-      Script: {instanceID: 11366}
+      Script: {instanceID: 11386}
     - Class: 114
-      Script: {instanceID: 11750}
+      Script: {instanceID: 11792}
     - Class: 114
-      Script: {instanceID: 12128}
+      Script: {instanceID: 12202}
     - Class: 114
-      Script: {instanceID: 12314}
+      Script: {instanceID: 12248}
     - Class: 114
-      Script: {instanceID: 12582}
+      Script: {instanceID: 12408}
     - Class: 114
-      Script: {instanceID: 12608}
+      Script: {instanceID: 12706}
     - Class: 114
-      Script: {instanceID: 12794}
+      Script: {instanceID: 12736}
     - Class: 114
-      Script: {instanceID: 12958}
+      Script: {instanceID: 12938}
+    - Class: 114
+      Script: {instanceID: 13116}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -352,6 +355,12 @@ ScriptsOnlyBuild:
     className: TMP_SpriteAnimator
   - hash:
       serializedVersion: 2
+      Hash: 18276cee0543fd305cd00ff5a56aec86
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: SocketIO
+    className: SocketIOComponent
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
@@ -374,6 +383,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: RawImage
+  - hash:
+      serializedVersion: 2
+      Hash: 18276cee0543fd305cd00ff5a56aec86
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: NetworkClient
   - hash:
       serializedVersion: 2
       Hash: 5ad4aa237d47ac2bab17bacb672edf7a
@@ -442,7 +457,7 @@ ScriptsOnlyBuild:
     className: TextMeshProUGUI
   - hash:
       serializedVersion: 2
-      Hash: 557cc92863e8c4b3df8164a4552aec06
+      Hash: 34ebbc904b3d41bc1d6bea9165368b3a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
@@ -478,7 +493,7 @@ ScriptsOnlyBuild:
     className: TMP_StyleSheet
   - hash:
       serializedVersion: 2
-      Hash: 98351d85e6d91aa8dc15d19916283fdb
+      Hash: d18e8766b6d54843b554a2a3d38142e7
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Client
@@ -532,6 +547,12 @@ ScriptsOnlyBuild:
     className: TestRunCallbackListener
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TestSocketIO
+  - hash:
+      serializedVersion: 2
       Hash: 4ef0f7d42cdb13479386e1f049c315aa
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner
@@ -582,4 +603,4 @@ ScriptsOnlyBuild:
   scenePathNames:
   - Assets/Scenes/Menu.unity
   - Assets/Scenes/Game.unity
-  playerPath: /Users/tilakputta/Checkers/ChineseCheckers.apk
+  playerPath: /Users/tilakputta/builds/android/ChineseCheckers.apk
