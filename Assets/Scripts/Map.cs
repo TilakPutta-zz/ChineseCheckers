@@ -23,13 +23,13 @@ public class Map : MonoBehaviour
     float zOffset = 0.764f;
 
     private Peg selectedPeg;
+    private Color selectedPegColor;
     private bool jumped;
     private bool moved;
     private Color highLight1 = Color.HSVToRGB(0.5f, 0.5f, 0.5f);
     private Color highLight2 = Color.HSVToRGB(0.499f, 0.499f, 0.499f);
 
     private int whoseTurn;
-    private int[] turns;
     private Client client;
     // Start is called before the first frame update
     void Start()
@@ -41,39 +41,16 @@ public class Map : MonoBehaviour
         GenerateBoard();
         GeneratePlayers(client.numberOfPlayers);
         whoseTurn = 0;
-        switch (client.numberOfPlayers)
-        {
-            case 2:
-                {
-                    turns = new int[2] {1, 2};
-                    break;
-                }
-            case 3:
-                {
-                    turns = new int[3] { 1, 3, 2 };
-                    break;
-                }
-            case 4:
-                {
-                    turns = new int[4] { 1, 3, 2, 4 };
-                    break;
-                }
-            case 5:
-                {
-                    turns = new int[5] { 1, 3, 5, 2, 4 };
-                    break;
-                }
-            case 6:
-                {
-                    turns = new int[6] { 1, 3, 5, 2, 4, 6 };
-                    break;
-                }
-            default:
-                {
-                    turns = new int[2] { 1, 2 };
-                    break;
-                }
-        }
+        setCamera(client.numberOfPlayers, client.playerNumber);
+    }
+
+    private void setCamera(int n, int p)
+    {
+        int modifiedN = (n == 5) ? n + 1: n;
+        int cameraAngle = (playerNumber - 1) * (360 / modifiedN);
+        cameraAngle = (cameraAngle == 90 || cameraAngle == 270) ? (cameraAngle - 30) : cameraAngle;
+        Quaternion r = Camera.main.transform.rotation;
+        Camera.main.transform.Rotate(new Vector3(r.x, r.y, cameraAngle));
     }
 
     private void Update()
@@ -90,7 +67,7 @@ public class Map : MonoBehaviour
                 MeshRenderer mr = ourHitObject.GetComponentInChildren<MeshRenderer>();
                 //Debug.Log(mr.name);
                 Debug.Log("whoseTrun: "+whoseTurn+", playerNumber: "+playerNumber);
-                if (mr.name.StartsWith("Sphere") && ourHitObject.name.StartsWith("Peg"+turns[whoseTurn]) && playerNumber == turns[whoseTurn])
+                if (mr.name.StartsWith("Sphere") && ourHitObject.name.StartsWith("Peg"+(whoseTurn + 1)) && playerNumber == whoseTurn + 1)
                 {
                     mouseOverPeg(ourHitObject);
                 }
@@ -172,6 +149,8 @@ public class Map : MonoBehaviour
                 client.Send(msg);
             }
             selectedPeg = pegs[row, col];
+            selectedPegColor = selectedPeg.GetComponentInChildren<MeshRenderer>().material.color;
+            selectedPeg.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
             Vector3 pos = selectedPeg.transform.position;
             selectedPeg.transform.position = new Vector3(pos.x, 0.5f, pos.z);
         }
@@ -189,6 +168,7 @@ public class Map : MonoBehaviour
             selectedPeg = pegs[row, col];
             Vector3 pos = selectedPeg.transform.position;
             selectedPeg.transform.position = new Vector3(pos.x, 0.0f, pos.z);
+            selectedPeg.GetComponentInChildren<MeshRenderer>().material.color = selectedPegColor;
             selectedPeg = null;
             moved = false;
             jumped = false;
@@ -761,8 +741,8 @@ public class Map : MonoBehaviour
                     FillThirdTriangle(p3);
                     FillFourthTriangle(p4);
 
-                    FillFourthTriangle(p5);
-                    FillFifthTriangle(p6);
+                    FillFifthTriangle(p5);
+                    FillSixthTriangle(p6);
                     break;
                 }
             default:
