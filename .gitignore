@@ -29,7 +29,7 @@ sysinfo.txt
 .consulo/
 /*.tmp
 /*.svd
- 
+.vs* 
 # ============ #
 # OS generated #
 # ============ #
