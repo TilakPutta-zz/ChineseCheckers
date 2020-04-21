@@ -41,10 +41,10 @@ public class Map : MonoBehaviour
         GenerateBoard();
         GeneratePlayers(client.numberOfPlayers);
         whoseTurn = 0;
-        setCamera(client.numberOfPlayers, client.playerNumber);
+        setCamera(client.numberOfPlayers);
     }
 
-    private void setCamera(int n, int p)
+    private void setCamera(int n)
     {
         int modifiedN = (n == 5) ? n + 1: n;
         int cameraAngle = (playerNumber - 1) * (360 / modifiedN);
@@ -60,13 +60,9 @@ public class Map : MonoBehaviour
         if (Physics.Raycast(ray, out hitInfo))
         {
             GameObject ourHitObject = hitInfo.collider.transform.parent.gameObject;
-            //Debug.Log("hit info:" + ourHitObject.name);
-
             if (Input.GetMouseButtonDown(0))
             {
                 MeshRenderer mr = ourHitObject.GetComponentInChildren<MeshRenderer>();
-                //Debug.Log(mr.name);
-                Debug.Log("whoseTrun: "+whoseTurn+", playerNumber: "+playerNumber);
                 if (mr.name.StartsWith("Sphere") && ourHitObject.name.StartsWith("Peg"+(whoseTurn + 1)) && playerNumber == whoseTurn + 1)
                 {
                     mouseOverPeg(ourHitObject);
@@ -134,7 +130,15 @@ public class Map : MonoBehaviour
             else
             {
                 clearHighLights(selectedPeg.pegPlacedRow, selectedPeg.pegPlacedCol);
-                completeMove(selectedPeg.pegPlacedRow, selectedPeg.pegPlacedCol, playerNumber, true);
+                if (!moved && !jumped)
+                {
+                    Debug.Log("Cancelled");
+                    cancelMove(playerNumber, true);
+                } else
+                {
+                    Debug.Log("Completed");
+                    completeMove(selectedPeg.pegPlacedRow, selectedPeg.pegPlacedCol, playerNumber, true);
+                }
             }
         }
     }
@@ -153,6 +157,24 @@ public class Map : MonoBehaviour
             selectedPeg.GetComponentInChildren<MeshRenderer>().material.color = Color.white;
             Vector3 pos = selectedPeg.transform.position;
             selectedPeg.transform.position = new Vector3(pos.x, 0.5f, pos.z);
+        }
+    }
+
+    public void cancelMove(int incomingPlayerNumber, bool pass)
+    {
+        if (pass || incomingPlayerNumber != playerNumber)
+        {
+            if (pass)
+            {
+                string msg = "C_CANCEL_MOV|" + playerNumber;
+                client.Send(msg);
+            }
+            Vector3 pos = selectedPeg.transform.position;
+            selectedPeg.transform.position = new Vector3(pos.x, 0.0f, pos.z);
+            selectedPeg.GetComponentInChildren<MeshRenderer>().material.color = selectedPegColor;
+            selectedPeg = null;
+            moved = false;
+            jumped = false;
         }
     }
 

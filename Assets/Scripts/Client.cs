@@ -108,6 +108,9 @@ public class Client : MonoBehaviour
                 case "S_DONE_MOV":
                     Map.Instance.completeMove(Int32.Parse(aData[1]), Int32.Parse(aData[2]), Int32.Parse(aData[3]), false);
                     break;
+                case "S_CANCEL_MOV":
+                    Map.Instance.cancelMove(Int32.Parse(aData[1]), false);
+                    break;
             }
         }
     }
