@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using TMPro;
 
 public class Map : MonoBehaviour
 {
@@ -15,6 +17,10 @@ public class Map : MonoBehaviour
     public GameObject p5;
     public GameObject p6;
     public Peg[,] pegs = new Peg[17, 13];
+
+    private TextMeshProUGUI playerNameText;
+    public GameObject playerTag;
+    public GameObject nameTag;
 
     int width = 13;
     int height = 17;
@@ -42,6 +48,15 @@ public class Map : MonoBehaviour
         GeneratePlayers(client.numberOfPlayers);
         whoseTurn = 0;
         setCamera(client.numberOfPlayers);
+
+        // Debug.Log(playersDetails);
+
+        // GameObject playerTagObject = Instantiate(nameTag, new Vector3(-350, -320, 0), Quaternion.identity) as GameObject;
+        // // playerTagObject.transform.SetParent(transform);
+        // playerTagObject.GetComponentInChildren<TextMeshProUGUI>().transform.localPosition = new Vector3(-350, -320, 0);
+        // playerTagObject.GetComponentInChildren<TextMeshProUGUI>().text = playersDetails[0].name;
+
+        
     }
 
     private void setCamera(int n)
@@ -709,9 +724,65 @@ public class Map : MonoBehaviour
 
     }
 
+    private void CreatePlayerTag(int x, int y, string name, GameObject player, int playerNumber) {
+
+        GameObject playerPeg = Instantiate(player, new Vector3(x-10, y, 0), Quaternion.identity) as GameObject;
+        // playerPeg.transform.SetParent(transform);
+        Peg p = playerPeg.GetComponent<Peg>();
+        //Debug.Log(row + "---" + col);
+        p.pegRow = x;
+        p.pegCol = y;
+        p.pegPlacedRow = x;
+        p.pegPlacedCol = y;
+
+        GameObject playerTagObject = Instantiate(nameTag, new Vector3(x, y, 0), Quaternion.identity) as GameObject;
+        // playerTagObject.transform.SetParent(transform);
+        playerTagObject.GetComponentInChildren<TextMeshProUGUI>().transform.localPosition = new Vector3(x, y, 0);
+        playerTagObject.GetComponentInChildren<TextMeshProUGUI>().text = $"{playerNumber}: {name}";
+        playerTagObject.GetComponentInChildren<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
+        // playerTagObject.GetComponentInChildren<TextMeshProUGUI>().enableAutoSizing = true;
+    }
+
+    private GameObject GetPlayerWithNumber(int playerNumber) {
+        switch(playerNumber) {
+            case 1: {
+                return p1;
+            }
+            case 2: {
+                return p2;
+            }
+            case 3: {
+                return p3;
+            }
+            case 4: {
+                return p4;
+            }
+            case 5: {
+                return p5;
+            }
+            case 6: {
+                return p6;
+            }
+            default:
+                return p1;
+        }
+    }
+
     private void GeneratePlayers(int players)
     {
-        Debug.Log(players);
+        List<GameClient> playersDetails = client.getPlayers();
+        int baseX = -85;
+        int baseY = -250;
+
+        for (int i=0; i<playersDetails.Count; i++) {
+            int xPos = (int) (baseX*(Math.Pow(-1, i)));
+            if(i%2 == 0) {
+                baseY = baseY + ((i/2)*40);
+            }
+            
+            CreatePlayerTag(xPos, baseY, playersDetails[i].name, GetPlayerWithNumber(i), i+1);
+        }
+
         switch (players)
         {
             case 2:
@@ -719,9 +790,12 @@ public class Map : MonoBehaviour
                     Debug.Log("2");
                     // player 1
                     FillFirstTriangle(p1);
+                    // CreatePlayerTag(-85, -250, playersDetails[0].name, p1);
 
                     // player 2
                     FillFourthTriangle(p2);
+                    // CreatePlayerTag(85, -250, playersDetails[1].name, p2);
+
                     break;
                 }
             case 3:

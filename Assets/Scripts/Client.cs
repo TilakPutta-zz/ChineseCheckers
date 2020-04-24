@@ -22,6 +22,7 @@ public class Client : MonoBehaviour
     private StreamReader reader;
 
     private List<GameClient> players = new List<GameClient>();
+    private GameClient[] playersPositions = new GameClient[6];
 
     private void Start()
     {
@@ -30,6 +31,14 @@ public class Client : MonoBehaviour
         //NetworkClient nc = Instantiate(networkClientPrefab).GetComponent<NetworkClient>();
         //Debug.Log("INSTANCE:"+nc);
         //network = nc;
+    }
+
+    public List<GameClient> getPlayers() {
+        return players;
+    }
+
+    public GameClient[] getPlayerDetailsArr() {
+        return playersPositions;
     }
 
     //public bool ConnectToServer(string host, int port)
@@ -120,6 +129,8 @@ public class Client : MonoBehaviour
         GameClient gc = new GameClient();
         gc.name = name;
         gc.playerNumber = players.Count + 1;
+
+        playersPositions[gc.playerNumber] = gc;
 
         players.Add(gc);
         Debug.Log("Players: " + numberOfPlayers + ", connected: " + players.Count);

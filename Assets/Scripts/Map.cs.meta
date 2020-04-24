@@ -12,6 +12,10 @@ MonoImporter:
   - p4: {fileID: 5516257860578804200, guid: e116d36206e2345aba16fce16ad5743e, type: 3}
   - p5: {fileID: 7974959654275652311, guid: ab2744ec96bb942febebb1a0c547f58f, type: 3}
   - p6: {fileID: 4334571993197461684, guid: 50acb06d009364b599f15ba785def000, type: 3}
+  - playerTag: {fileID: 4404720815251794193, guid: 5b945eb0e2ef54589b8a7bf038ce90b2,
+      type: 3}
+  - nameTag: {fileID: 8473450983777253700, guid: 5b801d4fad539438db076ee201485873,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
